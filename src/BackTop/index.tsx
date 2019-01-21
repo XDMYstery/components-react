@@ -29,9 +29,16 @@ class BackTop extends React.Component<IBackTopProps, IBackTopState> {
     visibilityHeight: 400,
     target: document.documentElement,
   };
+  public scrollEvent: any;
   public state: IBackTopState = {
     visible: false,
   };
+  public componentDidMount(): void {
+    this.scrollEvent = this.props.target.addEventListener('scroll', this.handleScroll);
+  }
+  public componentWillUnmount(): void {
+    this.props.target.removeEventListener('scroll', this.scrollEvent);
+  }
   public scrollToTop = (e: React.MouseEvent<HTMLDivElement>): void => {
     const scrollTop = this.props.target.scrollTop;
     const startTime = Date.now();
@@ -50,6 +57,11 @@ class BackTop extends React.Component<IBackTopProps, IBackTopState> {
   }
   public setScrollTop(value: number): void {
     this.props.target.scrollTop = value;
+  }
+  public handleScroll = (): void => {
+    this.setState({
+      visible: this.props.target.scrollTop > this.props.visibilityHeight,
+    });
   }
   public render(): React.ReactNode {
     if (this.state.visible) {
